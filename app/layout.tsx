@@ -1,5 +1,6 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import type { Metadata } from "next";
+import { unstable_noStore as noStore } from "next/cache";
 import { Inter } from "next/font/google";
 import { Navbar } from "./components/Navbar";
 import { ThemeProvider } from "./components/theme-provider";
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 async function getData(userId: string) {
+  noStore();
   if (userId) {
     const data = await prisma.user.findUnique({
       where: {
@@ -37,7 +39,9 @@ export default async function RootLayout({
   const data = await getData(user?.id as string);
   return (
     <html lang="en">
-      <body className={`${inter.className} ${data?.colorScheme ?? 'theme-orange'}`}>
+      <body
+        className={`${inter.className} ${data?.colorScheme ?? "theme-orange"}`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
